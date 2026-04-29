@@ -1,20 +1,40 @@
-import { createServer } from "node:http";
-import { toNodeHandler } from "better-auth/node";
-import { auth } from "./auth/auth.ts";
-import { getAuthProviderConfig } from "./auth/provider-config.ts";
-import { getSessionFromHeaders } from "./auth/session.ts";
-import { getHealthPayload } from "./health.ts";
-import { createNoteSchema } from "./notes/schema.ts";
 import {
-  createNoteForUser,
-  deleteNoteForUser,
-  listNotesForUser,
-  updateNoteForUser,
-} from "./notes/service.ts";
+  createServer,
+  type IncomingMessage,
+  type ServerResponse,
+} from "node:http";
+import { getAuthProviderConfig } from "./auth/provider-config.ts";
+import { getHealthPayload } from "./health.ts";
 
 const port = 3001;
 const host = "127.0.0.1";
-const authNodeHandler = toNodeHandler(auth.handler);
+
+let authNodeHandlerPromise:
+  | Promise<
+      (
+        request: IncomingMessage,
+        response: ServerResponse<IncomingMessage>,
+      ) => Promise<void>
+    >
+  | undefined;
+
+async function getAuthNodeHandler() {
+  if (!authNodeHandlerPromise) {
+    authNodeHandlerPromise = (async () => {
+      const [{ toNodeHandler }, { auth }] = await Promise.all([
+        import("better-auth/node"),
+        import("./auth/auth.ts"),
+      ]);
+
+      return toNodeHandler(auth.handler) as (
+        request: IncomingMessage,
+        response: ServerResponse<IncomingMessage>,
+      ) => Promise<void>;
+    })();
+  }
+
+  return authNodeHandlerPromise;
+}
 
 const server = createServer(async (request, response) => {
   const url = new URL(request.url ?? "/", `http://${request.headers.host}`);
@@ -32,6 +52,12 @@ const server = createServer(async (request, response) => {
   }
 
   if (url.pathname === "/api/notes") {
+    const [{ getSessionFromHeaders }, { createNoteSchema }, notesService] =
+      await Promise.all([
+        import("./auth/session.ts"),
+        import("./notes/schema.ts"),
+        import("./notes/service.ts"),
+      ]);
     const session = await getSessionFromHeaders(request.headers);
 
     if (!session?.user) {
@@ -41,7 +67,7 @@ const server = createServer(async (request, response) => {
     }
 
     if (request.method === "GET") {
-      const notes = await listNotesForUser(session.user.id);
+      const notes = await notesService.listNotesForUser(session.user.id);
       response.writeHead(200, { "content-type": "application/json" });
       response.end(JSON.stringify({ notes }));
       return;
@@ -62,7 +88,10 @@ const server = createServer(async (request, response) => {
         return;
       }
 
-      const note = await createNoteForUser(session.user.id, payload.data);
+      const note = await notesService.createNoteForUser(
+        session.user.id,
+        payload.data,
+      );
       response.writeHead(201, { "content-type": "application/json" });
       response.end(JSON.stringify({ note }));
       return;
@@ -77,6 +106,12 @@ const server = createServer(async (request, response) => {
   }
 
   if (url.pathname.startsWith("/api/notes/")) {
+    const [{ getSessionFromHeaders }, { createNoteSchema }, notesService] =
+      await Promise.all([
+        import("./auth/session.ts"),
+        import("./notes/schema.ts"),
+        import("./notes/service.ts"),
+      ]);
     const session = await getSessionFromHeaders(request.headers);
     const noteId = url.pathname.split("/").at(-1);
 
@@ -107,7 +142,11 @@ const server = createServer(async (request, response) => {
         return;
       }
 
-      const note = await updateNoteForUser(session.user.id, noteId, payload.data);
+      const note = await notesService.updateNoteForUser(
+        session.user.id,
+        noteId,
+        payload.data,
+      );
 
       if (!note) {
         response.writeHead(404, { "content-type": "application/json" });
@@ -121,7 +160,10 @@ const server = createServer(async (request, response) => {
     }
 
     if (request.method === "DELETE") {
-      const note = await deleteNoteForUser(session.user.id, noteId);
+      const note = await notesService.deleteNoteForUser(
+        session.user.id,
+        noteId,
+      );
 
       if (!note) {
         response.writeHead(404, { "content-type": "application/json" });
@@ -143,6 +185,7 @@ const server = createServer(async (request, response) => {
   }
 
   if (url.pathname.startsWith("/api/auth/")) {
+    const authNodeHandler = await getAuthNodeHandler();
     await authNodeHandler(request, response);
     return;
   }
