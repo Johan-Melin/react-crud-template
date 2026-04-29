@@ -5,8 +5,7 @@ This file records standing repository rules and working conventions for agent-as
 ## Git Workflow
 
 - Use conventional commits with `type(scope): summary`.
-- The user reviews commits before pushing.
-- Do not push changes automatically.
+- Push commits automatically unless the user asks to review first.
 - Make a single cohesive, runnable change per commit.
 - Prefer vertical slices over horizontal refactors.
 - Avoid unrelated edits and keep diffs small enough to review comfortably.
