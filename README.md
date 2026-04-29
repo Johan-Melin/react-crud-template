@@ -16,8 +16,9 @@ This template is designed to make forking easy:
 
 1. copy `.env.example` to `.env.local`
 2. set your database and auth env vars
-3. run the database migrations
-4. start building your app
+3. run the setup check
+4. run the database migrations
+5. start building your app
 
 The app keeps all database, auth, and OAuth logic server-only in `api/` or
 `server/`. Browser code in `src/` only talks to API routes.
@@ -69,6 +70,12 @@ How provider visibility works:
 
 ```bash
 npm install
+```
+
+Validate your local env before migrations:
+
+```bash
+npm run setup:check
 ```
 
 ## Database Workflow
@@ -130,6 +137,7 @@ npm run build
 npm run lint
 npm run format
 npm run format:check
+npm run setup:check
 npm run db:generate
 npm run db:migrate
 npm run db:seed

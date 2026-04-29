@@ -16,6 +16,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "setup:check": "node --import tsx server/setup/check.ts",
     "test": "vitest run",
     "preview": "vite preview"
   },
