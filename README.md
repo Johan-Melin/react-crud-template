@@ -85,6 +85,12 @@ Apply migrations:
 npm run db:migrate
 ```
 
+Seed a demo user and notes optionally:
+
+```bash
+npm run db:seed
+```
+
 Open Drizzle Studio:
 
 ```bash
@@ -126,6 +132,7 @@ npm run format
 npm run format:check
 npm run db:generate
 npm run db:migrate
+npm run db:seed
 npm run db:studio
 npm run auth:generate
 ```
@@ -176,5 +183,10 @@ Examples:
 
 - Email verification is intentionally disabled by default.
 - Password reset is not included yet.
+- The seed script is optional and does not run automatically.
+- `npm run db:seed` creates:
+  - `demo@example.com`
+  - password: `demo-password-1234`
+  - a couple of demo notes
 - The template currently uses a notes resource to demonstrate minimal CRUD
   without forcing a heavier domain model.
