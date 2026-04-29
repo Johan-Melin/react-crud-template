@@ -87,12 +87,34 @@ export function HomePage() {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/" className="button-primary">
-              Stay on the starter
+            <Link to="/sign-up" className="button-primary">
+              Create account
+            </Link>
+            <Link to="/sign-in" className="button-secondary">
+              Sign in
             </Link>
             <a href="#status" className="button-secondary">
               Check runtime status
             </a>
+          </div>
+
+          <div className="mt-8 rounded-[1.5rem] border border-app-border bg-white/55 p-5 dark:bg-white/5">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-app-muted">
+              Auth route status
+            </p>
+            <p className="mt-3 text-sm leading-6 text-app-text">
+              Email/password auth is wired server-side now, and the auth pages
+              use a safe provider endpoint to decide whether GitHub or Discord
+              should appear.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link to="/sign-up" className="button-secondary">
+                Open sign-up
+              </Link>
+              <Link to="/sign-in" className="button-secondary">
+                Open sign-in
+              </Link>
+            </div>
           </div>
         </div>
 
