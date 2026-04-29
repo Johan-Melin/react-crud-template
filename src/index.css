@@ -1,17 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap");
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-bg: #f5efe4;
+  --color-bg-elevated: rgba(255, 251, 245, 0.8);
+  --color-bg-strong: #fffdf8;
+  --color-text: #221c15;
+  --color-muted: #6a6258;
+  --color-border: rgba(60, 43, 18, 0.12);
+  --color-accent: #0f766e;
+  --color-accent-strong: #115e59;
+  --color-accent-soft: rgba(15, 118, 110, 0.12);
+  --color-ring: rgba(15, 118, 110, 0.32);
+  --shadow-panel: 0 24px 60px rgba(84, 60, 32, 0.12);
+}
+
+:root.dark {
+  --color-bg: #10181f;
+  --color-bg-elevated: rgba(20, 31, 40, 0.82);
+  --color-bg-strong: #16212b;
+  --color-text: #eff4f6;
+  --color-muted: #9ab0bc;
+  --color-border: rgba(214, 231, 240, 0.12);
+  --color-accent: #5eead4;
+  --color-accent-strong: #99f6e4;
+  --color-accent-soft: rgba(94, 234, 212, 0.14);
+  --color-ring: rgba(94, 234, 212, 0.35);
+  --shadow-panel: 0 30px 80px rgba(0, 0, 0, 0.32);
+}
+
+@theme inline {
+  --font-sans: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+  --color-app-bg: var(--color-bg);
+  --color-app-bg-elevated: var(--color-bg-elevated);
+  --color-app-bg-strong: var(--color-bg-strong);
+  --color-app-text: var(--color-text);
+  --color-app-muted: var(--color-muted);
+  --color-app-border: var(--color-border);
+  --color-app-accent: var(--color-accent);
+  --color-app-accent-strong: var(--color-accent-strong);
+  --color-app-accent-soft: var(--color-accent-soft);
+  --color-app-ring: var(--color-ring);
+}
 
 @layer base {
   * {
     box-sizing: border-box;
   }
 
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
   body {
     margin: 0;
     min-height: 100vh;
-    background: #f8fafc;
-    color: #0f172a;
-    font-family:
-      Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--color-text);
+    background:
+      radial-gradient(
+        circle at top left,
+        rgba(255, 255, 255, 0.65),
+        transparent 34%
+      ),
+      radial-gradient(
+        circle at right 20%,
+        rgba(15, 118, 110, 0.12),
+        transparent 28%
+      ),
+      linear-gradient(180deg, var(--color-bg-strong), var(--color-bg));
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 2rem 2rem;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25), transparent 70%);
+    opacity: 0.55;
   }
 
   a {
@@ -33,10 +112,29 @@
   }
 
   ::selection {
-    background: rgba(14, 165, 233, 0.2);
+    background: var(--color-accent-soft);
   }
 
   #root {
     min-height: 100vh;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-[2rem] border border-app-border bg-app-bg-elevated backdrop-blur-xl;
+    box-shadow: var(--shadow-panel);
+  }
+
+  .button-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-app-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-app-accent-strong;
+  }
+
+  .button-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-app-border bg-white/45 px-5 py-3 text-sm font-semibold text-app-text transition hover:bg-white/70 dark:bg-white/5 dark:hover:bg-white/10;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-app-border bg-app-accent-soft px-3 py-1 text-xs font-medium uppercase tracking-[0.24em] text-app-accent;
   }
 }
