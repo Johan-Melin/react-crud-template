@@ -8,6 +8,13 @@
       "when": 1777438481925,
       "tag": "0000_worthless_proemial_gods",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777439730219,
+      "tag": "0001_open_smasher",
+      "breakpoints": true
     }
   ]
 }
