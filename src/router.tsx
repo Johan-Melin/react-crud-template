@@ -3,6 +3,7 @@ import {
   createRoute,
   createRouter,
 } from "@tanstack/react-router";
+import { AppHomePage } from "./routes/app-home-page.tsx";
 import { HomePage } from "./routes/home-page.tsx";
 import { RootLayout } from "./routes/root-layout.tsx";
 import { SignInPage } from "./routes/sign-in-page.tsx";
@@ -30,7 +31,18 @@ const signUpRoute = createRoute({
   component: SignUpPage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, signInRoute, signUpRoute]);
+const appRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/app",
+  component: AppHomePage,
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  signInRoute,
+  signUpRoute,
+  appRoute,
+]);
 
 export const router = createRouter({
   routeTree,

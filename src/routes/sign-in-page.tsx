@@ -4,10 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { AuthCard } from "../features/auth/auth-card.tsx";
 import { getProviderConfig } from "../features/auth/get-provider-config.ts";
 import { ProviderButtons } from "../features/auth/provider-buttons.tsx";
+import { useSessionRedirect } from "../features/auth/use-session-redirect.ts";
 import { authClient } from "../lib/auth-client.ts";
 
 export function SignInPage() {
   const navigate = useNavigate();
+  const sessionQuery = useSessionRedirect({ whenAuthenticated: "/app" });
   const providersQuery = useQuery({
     queryKey: ["auth", "providers"],
     queryFn: getProviderConfig,
@@ -17,6 +19,10 @@ export function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  if (sessionQuery.isPending) {
+    return null;
+  }
+
   async function handleEmailSignIn(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
@@ -25,7 +31,7 @@ export function SignInPage() {
     const result = await authClient.signIn.email({
       email,
       password,
-      callbackURL: "/",
+      callbackURL: "/app",
     });
 
     setIsSubmitting(false);
@@ -35,7 +41,7 @@ export function SignInPage() {
       return;
     }
 
-    void navigate({ to: "/" });
+    void navigate({ to: "/app" });
   }
 
   async function handleSocialSignIn(provider: "github" | "discord") {
@@ -44,7 +50,7 @@ export function SignInPage() {
 
     const result = await authClient.signIn.social({
       provider,
-      callbackURL: "/",
+      callbackURL: "/app",
     });
 
     setIsSubmitting(false);

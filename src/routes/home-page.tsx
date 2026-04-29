@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { authClient } from "../lib/auth-client.ts";
 import { getHealth } from "../features/system/get-health.ts";
 import { publicEnv } from "../lib/public-env.ts";
 import { ThemeToggle } from "../theme/theme-toggle.tsx";
@@ -13,12 +14,14 @@ const plannedSlices = [
 
 export function HomePage() {
   const { mode, resolvedTheme } = useTheme();
+  const sessionQuery = authClient.useSession();
   const healthQuery = useQuery({
     queryKey: ["system", "health"],
     queryFn: getHealth,
   });
 
   const appName = publicEnv.VITE_APP_NAME ?? "React CRUD Template";
+  const isSignedIn = Boolean(sessionQuery.data?.session);
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-6 sm:px-6 lg:px-8">
@@ -87,12 +90,31 @@ export function HomePage() {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/sign-up" className="button-primary">
-              Create account
-            </Link>
-            <Link to="/sign-in" className="button-secondary">
-              Sign in
-            </Link>
+            {isSignedIn ? (
+              <Link to="/app" className="button-primary">
+                Open app
+              </Link>
+            ) : (
+              <Link to="/sign-up" className="button-primary">
+                Create account
+              </Link>
+            )}
+            {isSignedIn ? (
+              <button
+                type="button"
+                className="button-secondary"
+                onClick={() => {
+                  void authClient.signOut();
+                  window.location.reload();
+                }}
+              >
+                Sign out
+              </button>
+            ) : (
+              <Link to="/sign-in" className="button-secondary">
+                Sign in
+              </Link>
+            )}
             <a href="#status" className="button-secondary">
               Check runtime status
             </a>
