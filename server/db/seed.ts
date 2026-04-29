@@ -1,7 +1,7 @@
 import { and, count, eq } from "drizzle-orm";
-import { auth } from "../auth/auth.ts";
-import { db } from "./client.ts";
-import { notes, user } from "./schema.ts";
+import { auth } from "../auth/auth.js";
+import { db } from "./client.js";
+import { notes, user } from "./schema.js";
 
 const demoUser = {
   name: "Demo User",

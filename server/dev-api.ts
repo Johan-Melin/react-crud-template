@@ -3,8 +3,8 @@ import {
   type IncomingMessage,
   type ServerResponse,
 } from "node:http";
-import { getAuthProviderConfig } from "./auth/provider-config.ts";
-import { getHealthPayload } from "./health.ts";
+import { getAuthProviderConfig } from "./auth/provider-config.js";
+import { getHealthPayload } from "./health.js";
 
 const port = 3001;
 const host = "127.0.0.1";
@@ -23,7 +23,7 @@ async function getAuthNodeHandler() {
     authNodeHandlerPromise = (async () => {
       const [{ toNodeHandler }, { auth }] = await Promise.all([
         import("better-auth/node"),
-        import("./auth/auth.ts"),
+        import("./auth/auth.js"),
       ]);
 
       return toNodeHandler(auth.handler) as (
@@ -54,9 +54,9 @@ const server = createServer(async (request, response) => {
   if (url.pathname === "/api/notes") {
     const [{ getSessionFromHeaders }, { createNoteSchema }, notesService] =
       await Promise.all([
-        import("./auth/session.ts"),
-        import("./notes/schema.ts"),
-        import("./notes/service.ts"),
+        import("./auth/session.js"),
+        import("./notes/schema.js"),
+        import("./notes/service.js"),
       ]);
     const session = await getSessionFromHeaders(request.headers);
 
@@ -108,9 +108,9 @@ const server = createServer(async (request, response) => {
   if (url.pathname.startsWith("/api/notes/")) {
     const [{ getSessionFromHeaders }, { createNoteSchema }, notesService] =
       await Promise.all([
-        import("./auth/session.ts"),
-        import("./notes/schema.ts"),
-        import("./notes/service.ts"),
+        import("./auth/session.js"),
+        import("./notes/schema.js"),
+        import("./notes/service.js"),
       ]);
     const session = await getSessionFromHeaders(request.headers);
     const noteId = url.pathname.split("/").at(-1);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createNoteSchema } from "./schema.ts";
+import { createNoteSchema } from "./schema.js";
 
 describe("createNoteSchema", () => {
   it("accepts trimmed non-empty note text", () => {

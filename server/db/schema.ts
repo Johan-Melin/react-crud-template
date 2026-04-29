@@ -1,5 +1,5 @@
 import { index, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
-export * from "../auth/generated-schema.ts";
+export * from "../auth/generated-schema.js";
 
 export const notes = pgTable(
   "notes",
