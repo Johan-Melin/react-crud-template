@@ -2,15 +2,22 @@ import "../load-env.ts";
 import { z } from "zod";
 
 const socialProviders = ["github", "discord"] as const;
+const optionalNonEmptyString = z.preprocess((value) => {
+  if (typeof value === "string" && value.trim() === "") {
+    return undefined;
+  }
+
+  return value;
+}, z.string().min(1).optional());
 
 const authEnvSchema = z.object({
   BETTER_AUTH_SECRET: z.string().min(32).optional(),
   BETTER_AUTH_URL: z.url().optional(),
   AUTH_SOCIAL_PROVIDERS: z.string().optional(),
-  GITHUB_CLIENT_ID: z.string().min(1).optional(),
-  GITHUB_CLIENT_SECRET: z.string().min(1).optional(),
-  DISCORD_CLIENT_ID: z.string().min(1).optional(),
-  DISCORD_CLIENT_SECRET: z.string().min(1).optional(),
+  GITHUB_CLIENT_ID: optionalNonEmptyString,
+  GITHUB_CLIENT_SECRET: optionalNonEmptyString,
+  DISCORD_CLIENT_ID: optionalNonEmptyString,
+  DISCORD_CLIENT_SECRET: optionalNonEmptyString,
 });
 
 export type SocialProvider = (typeof socialProviders)[number];
