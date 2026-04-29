@@ -1,10 +1,13 @@
 import { createServer } from "node:http";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./auth/auth.ts";
 import { getAuthProviderConfig } from "./auth/provider-config.ts";
 import { getHealthPayload } from "./health.ts";
 
 const port = 3001;
+const authNodeHandler = toNodeHandler(auth.handler);
 
-const server = createServer((request, response) => {
+const server = createServer(async (request, response) => {
   const url = new URL(request.url ?? "/", `http://${request.headers.host}`);
 
   if (request.method === "GET" && url.pathname === "/api/health") {
@@ -16,6 +19,11 @@ const server = createServer((request, response) => {
   if (request.method === "GET" && url.pathname === "/api/auth/providers") {
     response.writeHead(200, { "content-type": "application/json" });
     response.end(JSON.stringify(getAuthProviderConfig()));
+    return;
+  }
+
+  if (url.pathname.startsWith("/api/auth/")) {
+    await authNodeHandler(request, response);
     return;
   }
 
