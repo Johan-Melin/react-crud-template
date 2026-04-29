@@ -33,3 +33,33 @@ export async function createNote(text: string) {
   const payload = (await response.json()) as { note: Note };
   return payload.note;
 }
+
+export async function updateNote(noteId: string, text: string) {
+  const response = await fetch(`/api/notes/${noteId}`, {
+    method: "PATCH",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ text }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Unable to update the note.");
+  }
+
+  const payload = (await response.json()) as { note: Note };
+  return payload.note;
+}
+
+export async function deleteNote(noteId: string) {
+  const response = await fetch(`/api/notes/${noteId}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Unable to delete the note.");
+  }
+
+  const payload = (await response.json()) as { note: Note };
+  return payload.note;
+}

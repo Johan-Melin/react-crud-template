@@ -7,7 +7,12 @@ import {
 } from "@tanstack/react-query";
 import { useSessionRedirect } from "../features/auth/use-session-redirect.ts";
 import { authClient } from "../lib/auth-client.ts";
-import { createNote, getNotes } from "../features/notes/api.ts";
+import {
+  createNote,
+  deleteNote,
+  getNotes,
+  updateNote,
+} from "../features/notes/api.ts";
 import { ThemeToggle } from "../theme/theme-toggle.tsx";
 import { useTheme } from "../theme/use-theme.ts";
 
@@ -17,6 +22,8 @@ export function AppHomePage() {
   const queryClient = useQueryClient();
   const [noteText, setNoteText] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editingText, setEditingText] = useState("");
   const notesQuery = useQuery({
     queryKey: ["notes"],
     queryFn: getNotes,
@@ -32,6 +39,29 @@ export function AppHomePage() {
       setError("Unable to create the note.");
     },
   });
+  const updateNoteMutation = useMutation({
+    mutationFn: ({ noteId, text }: { noteId: string; text: string }) =>
+      updateNote(noteId, text),
+    onSuccess: async () => {
+      setEditingNoteId(null);
+      setEditingText("");
+      setError(null);
+      await queryClient.invalidateQueries({ queryKey: ["notes"] });
+    },
+    onError: () => {
+      setError("Unable to update the note.");
+    },
+  });
+  const deleteNoteMutation = useMutation({
+    mutationFn: deleteNote,
+    onSuccess: async () => {
+      setError(null);
+      await queryClient.invalidateQueries({ queryKey: ["notes"] });
+    },
+    onError: () => {
+      setError("Unable to delete the note.");
+    },
+  });
 
   async function handleSignOut() {
     await authClient.signOut();
@@ -42,6 +72,29 @@ export function AppHomePage() {
     event.preventDefault();
     setError(null);
     await createNoteMutation.mutateAsync(noteText.trim());
+  }
+
+  async function handleUpdateNote(
+    event: React.FormEvent<HTMLFormElement>,
+    noteId: string,
+  ) {
+    event.preventDefault();
+    setError(null);
+    await updateNoteMutation.mutateAsync({
+      noteId,
+      text: editingText.trim(),
+    });
+  }
+
+  function startEditing(noteId: string, text: string) {
+    setEditingNoteId(noteId);
+    setEditingText(text);
+    setError(null);
+  }
+
+  function cancelEditing() {
+    setEditingNoteId(null);
+    setEditingText("");
   }
 
   if (sessionQuery.isPending) {
@@ -172,9 +225,61 @@ export function AppHomePage() {
                 key={note.id}
                 className="rounded-[1.5rem] border border-app-border bg-white/55 p-5 dark:bg-white/5"
               >
-                <p className="whitespace-pre-wrap text-sm leading-7 text-app-text">
-                  {note.text}
-                </p>
+                {editingNoteId === note.id ? (
+                  <form
+                    className="space-y-4"
+                    onSubmit={(event) => handleUpdateNote(event, note.id)}
+                  >
+                    <textarea
+                      required
+                      rows={5}
+                      value={editingText}
+                      onChange={(event) => setEditingText(event.target.value)}
+                      className="w-full rounded-[1.5rem] border border-app-border bg-white/70 px-4 py-3 text-app-text outline-none transition placeholder:text-app-muted focus:border-app-accent dark:bg-white/5"
+                    />
+                    <div className="flex flex-wrap gap-3">
+                      <button
+                        type="submit"
+                        className="button-primary"
+                        disabled={updateNoteMutation.isPending}
+                      >
+                        {updateNoteMutation.isPending ? "Saving..." : "Save"}
+                      </button>
+                      <button
+                        type="button"
+                        className="button-secondary"
+                        onClick={cancelEditing}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <p className="whitespace-pre-wrap text-sm leading-7 text-app-text">
+                      {note.text}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-3">
+                      <button
+                        type="button"
+                        className="button-secondary"
+                        onClick={() => startEditing(note.id, note.text)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="button-secondary"
+                        disabled={deleteNoteMutation.isPending}
+                        onClick={() => {
+                          void deleteNoteMutation.mutateAsync(note.id);
+                        }}
+                      >
+                        {deleteNoteMutation.isPending ? "Deleting..." : "Delete"}
+                      </button>
+                    </div>
+                  </>
+                )}
                 <p className="mt-4 text-xs font-medium uppercase tracking-[0.18em] text-app-muted">
                   Updated{" "}
                   {new Date(note.updatedAt).toLocaleString(undefined, {
