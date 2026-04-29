@@ -1,3 +1,4 @@
+import "../load-env.ts";
 import { z } from "zod";
 
 const fallbackDatabaseUrl =

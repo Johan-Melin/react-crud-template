@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "./server/load-env.ts";
 import { defineConfig } from "drizzle-kit";
 
 const fallbackDatabaseUrl =
