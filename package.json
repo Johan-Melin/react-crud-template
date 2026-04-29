@@ -7,7 +7,7 @@
     "auth:generate": "node node_modules/@better-auth/cli/dist/index.mjs generate --config server/auth/auth.ts --output server/auth/generated-schema.ts --yes",
     "dev": "concurrently -k -n web,api -c blue,green \"npm:dev:web\" \"npm:dev:api\"",
     "dev:web": "vite",
-    "dev:api": "tsx watch server/dev-api.ts",
+    "dev:api": "node --import tsx server/dev-api.ts",
     "build": "tsc -b && vite build",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",

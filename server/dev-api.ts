@@ -13,6 +13,7 @@ import {
 } from "./notes/service.ts";
 
 const port = 3001;
+const host = "127.0.0.1";
 const authNodeHandler = toNodeHandler(auth.handler);
 
 const server = createServer(async (request, response) => {
@@ -150,6 +151,6 @@ const server = createServer(async (request, response) => {
   response.end(JSON.stringify({ error: "Not found" }));
 });
 
-server.listen(port, () => {
-  console.log(`Local API emulator listening on http://127.0.0.1:${port}`);
+server.listen(port, host, () => {
+  console.log(`Local API emulator listening on http://${host}:${port}`);
 });
