@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { authClient } from "../lib/auth-client.ts";
 import { getHealth } from "../features/system/get-health.ts";
-import { publicEnv } from "../lib/public-env.ts";
 import { ThemeToggle } from "../theme/theme-toggle.tsx";
 import { useTheme } from "../theme/use-theme.ts";
 
@@ -20,7 +19,7 @@ export function HomePage() {
     queryFn: getHealth,
   });
 
-  const appName = publicEnv.VITE_APP_NAME ?? "React CRUD Template";
+  const appName = "React CRUD Template";
   const isSignedIn = Boolean(sessionQuery.data?.session);
 
   return (
