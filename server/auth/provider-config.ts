@@ -1,4 +1,4 @@
-import { getEnabledSocialProviders, type SocialProvider } from "./env.ts";
+import { getEnabledSocialProviders, type SocialProvider } from "./env.js";
 
 export type AuthProviderConfig = {
   emailAndPassword: boolean;

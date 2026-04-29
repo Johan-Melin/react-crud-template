@@ -1,0 +1,47 @@
+{
+  "version": 3,
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "^(?:/(.*))$",
+      "dest": "/index.html",
+      "check": true
+    },
+    {
+      "src": "^/api/auth/([^/]+)$",
+      "dest": "/api/auth/[...all]?...all=$1",
+      "check": true
+    },
+    {
+      "src": "^/api/notes/([^/]+)$",
+      "dest": "/api/notes/[id]?id=$1",
+      "check": true
+    },
+    {
+      "src": "^/api(/.*)?$",
+      "status": 404
+    },
+    {
+      "handle": "error"
+    },
+    {
+      "status": 404,
+      "src": "^(?!/api).*$",
+      "dest": "/404.html"
+    },
+    {
+      "handle": "miss"
+    },
+    {
+      "src": "^/api/(.+)(?:\\.(?:ts))$",
+      "dest": "/api/$1",
+      "check": true
+    }
+  ],
+  "framework": {
+    "version": "8.0.10"
+  },
+  "crons": []
+}

@@ -1,0 +1,16 @@
+{
+  "projectId": "prj_notcOmFWTuBAsIcHqoZ4IJH0VFWs",
+  "orgId": "team_gH1qEAQudTjNNAxuPiSjWcvT",
+  "projectName": "react-crud-template",
+  "settings": {
+    "createdAt": 1777461332393,
+    "framework": "vite",
+    "devCommand": null,
+    "installCommand": null,
+    "buildCommand": null,
+    "outputDirectory": null,
+    "rootDirectory": null,
+    "directoryListing": false,
+    "nodeVersion": "24.x"
+  }
+}

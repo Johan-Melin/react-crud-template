@@ -1,10 +1,10 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getSessionFromHeaders } from "../../server/auth/session.ts";
-import { createNoteSchema } from "../../server/notes/schema.ts";
+import { getSessionFromHeaders } from "../../server/auth/session.js";
+import { createNoteSchema } from "../../server/notes/schema.js";
 import {
   createNoteForUser,
   listNotesForUser,
-} from "../../server/notes/service.ts";
+} from "../../server/notes/service.js";
 
 export default async function handler(
   request: VercelRequest,

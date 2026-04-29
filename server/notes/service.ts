@@ -1,6 +1,6 @@
 import { and, desc, eq } from "drizzle-orm";
-import { db } from "../db/client.ts";
-import { notes } from "../db/schema.ts";
+import { db } from "../db/client.js";
+import { notes } from "../db/schema.js";
 import type { CreateNoteInput } from "./schema.ts";
 
 export async function listNotesForUser(userId: string) {

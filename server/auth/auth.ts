@@ -1,12 +1,12 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "../db/client.ts";
-import * as schema from "../db/schema.ts";
+import { db } from "../db/client.js";
+import * as schema from "../db/schema.js";
 import {
   getAuthBaseUrl,
   getAuthSecret,
   getEnabledSocialProviders,
-} from "./env.ts";
+} from "./env.js";
 
 export const auth = betterAuth({
   appName: "React CRUD Template",
