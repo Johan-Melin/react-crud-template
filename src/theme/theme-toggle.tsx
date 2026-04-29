@@ -26,7 +26,7 @@ export function ThemeToggle() {
             className={[
               "rounded-full px-3 py-2 text-xs font-semibold tracking-[0.2em] uppercase transition sm:px-4",
               isActive
-                ? "bg-app-accent text-white"
+                ? "bg-app-accent text-app-accent-foreground"
                 : "text-app-muted hover:text-app-text",
             ].join(" ")}
             onClick={() => setMode(option.value)}

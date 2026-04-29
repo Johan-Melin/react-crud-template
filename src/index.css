@@ -12,6 +12,7 @@
   --color-border: rgba(60, 43, 18, 0.12);
   --color-accent: #0f766e;
   --color-accent-strong: #115e59;
+  --color-accent-foreground: #ffffff;
   --color-accent-soft: rgba(15, 118, 110, 0.12);
   --color-ring: rgba(15, 118, 110, 0.32);
   --shadow-panel: 0 24px 60px rgba(84, 60, 32, 0.12);
@@ -26,6 +27,7 @@
   --color-border: rgba(214, 231, 240, 0.12);
   --color-accent: #5eead4;
   --color-accent-strong: #99f6e4;
+  --color-accent-foreground: #08211f;
   --color-accent-soft: rgba(94, 234, 212, 0.14);
   --color-ring: rgba(94, 234, 212, 0.35);
   --shadow-panel: 0 30px 80px rgba(0, 0, 0, 0.32);
@@ -41,6 +43,7 @@
   --color-app-border: var(--color-border);
   --color-app-accent: var(--color-accent);
   --color-app-accent-strong: var(--color-accent-strong);
+  --color-app-accent-foreground: var(--color-accent-foreground);
   --color-app-accent-soft: var(--color-accent-soft);
   --color-app-ring: var(--color-ring);
 }
@@ -127,7 +130,7 @@
   }
 
   .button-primary {
-    @apply inline-flex items-center justify-center rounded-full bg-app-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-app-accent-strong;
+    @apply inline-flex items-center justify-center rounded-full bg-app-accent px-5 py-3 text-sm font-semibold text-app-accent-foreground transition hover:bg-app-accent-strong;
   }
 
   .button-secondary {
