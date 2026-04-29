@@ -7,12 +7,17 @@ This file records standing repository rules and working conventions for agent-as
 - Use conventional commits with `type(scope): summary`.
 - The user reviews commits before pushing.
 - Do not push changes automatically.
+- Make a single cohesive, runnable change per commit.
+- Prefer vertical slices over horizontal refactors.
+- Avoid unrelated edits and keep diffs small enough to review comfortably.
 
 ## Repository Hygiene
 
 - Keep local-only agent artifacts out of version control.
 - Update `.gitignore` when new machine-local or tool-local files appear.
 - Avoid reverting user changes unless explicitly requested.
+- Keep all secrets and database/auth/OAuth logic server-only in `/api` or `/server`.
+- Browser code in `/src` may only call API endpoints and may only use non-sensitive `VITE_*` env vars.
 
 ## Planning
 
