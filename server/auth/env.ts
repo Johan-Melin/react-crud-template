@@ -1,4 +1,4 @@
-import "../load-env.ts";
+import "../load-env.js";
 import { z } from "zod";
 
 const socialProviders = ["github", "discord"] as const;
